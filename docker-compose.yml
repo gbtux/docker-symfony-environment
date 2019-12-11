@@ -17,6 +17,16 @@ services:
         - MYSQL_PASSWORD=secret
         - MYSQL_DATABASE=projet 
         - MYSQL_USER=user     
+  # PHPMYADMIN
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    labels:
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:phpmyadmin.docker.localhost"
+      - "traefik.backend=phpmyadmin"
+    links: 
+      - db:db  
   # TRAEFIK - REVERSE PROXY         
   reverse-proxy:
     container_name: reverse-proxy
@@ -27,8 +37,6 @@ services:
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock  
-    extra_hosts:  
-      - "portainer.docker.localhost:127.0.0.1"
   # APACHE - PHP7    
   apache:
     image: ulsmith/alpine-apache-php7

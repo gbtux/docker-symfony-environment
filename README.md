@@ -30,6 +30,8 @@ Go in your browser at http://portainer.docker.localhost --> portainer frontend
 
 Go in your browser at http://phpmyadmin.docker.localhost --> phpmyadmin
 
+Go in your browser to http://localhost:8080 --> Traefik (reverse proxy) frontend
+
 
 ## Develop
 cd public

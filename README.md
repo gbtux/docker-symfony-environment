@@ -9,6 +9,7 @@
 ## Privileges
 
 Your current user MUST beeing in the 'docker' group
+
 Check it:
 ```bash
 sudo groupadd docker
@@ -24,7 +25,9 @@ cd myProject
 ```
 
 Go in your browser at http://alpine.docker.localhost --> your project root
+
 Go in your browser at http://portainer.docker.localhost --> portainer frontend
+
 Go in your browser at http://phpmyadmin.docker.localhost --> phpmyadmin
 
 

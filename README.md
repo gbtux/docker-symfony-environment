@@ -1,4 +1,4 @@
-# Symfony development environnement
+# Symfony development environment
 
 # Requirements
 

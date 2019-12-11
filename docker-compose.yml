@@ -1,0 +1,70 @@
+version: "3"
+
+volumes: 
+  db: 
+  portainer_data:
+services:
+  # DATABASE
+  db:
+    image: mariadb
+    container_name: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes: 
+        - db:/var/lib/mysql
+    environment: 
+        - MYSQL_ROOT_PASSWORD=secret
+        - MYSQL_PASSWORD=secret
+        - MYSQL_DATABASE=projet 
+        - MYSQL_USER=user     
+  # TRAEFIK - REVERSE PROXY         
+  reverse-proxy:
+    container_name: reverse-proxy
+    image: traefik:v1.7
+    command: --api --docker
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  
+    extra_hosts:  
+      - "portainer.docker.localhost:127.0.0.1"
+  # APACHE - PHP7    
+  apache:
+    image: ulsmith/alpine-apache-php7
+    container_name: apache-php7
+    labels:
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:alpine.docker.localhost"
+      - "traefik.backend=alpine"
+    environment:
+      - MYSQL_HOST=mariadb
+      - APACHE_SERVER_NAME=alpine.docker.localhost
+      - PHP_SHORT_OPEN_TAG=On
+      - PHP_ERROR_REPORTING=E_ALL
+      - PHP_DISPLAY_ERRORS=On
+      - PHP_HTML_ERRORS=On
+      - PHP_XDEBUG_ENABLED=true
+    networks:
+      - default
+    volumes:
+      - ./public:/app/public
+    links: 
+      - db  
+    cap_add:
+      - SYS_TIME
+      - SYS_NICE
+  # PORTAINER - Docker UI
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: always
+    command: -H unix:///var/run/docker.sock
+    labels:
+      - "traefik.port=9000"
+      - "traefik.frontend.rule=Host:portainer.docker.localhost"
+      - "traefik.backend=portainer"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+  

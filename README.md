@@ -18,12 +18,15 @@ sudo usermod -aG docker $USER
 # Start containers
 
 ```bash
-git clone https://github.com/gbtux/alpine-apache-php7 env_dev
-cd env_dev
-docker-compose up -d
+git clone https://github.com/gbtux/docker-symfony-environment myProject
+cd myProject
+./start.sh
 ```
+
 Go in your browser at http://alpine.docker.localhost --> your project root
 Go in your browser at http://portainer.docker.localhost --> portainer frontend
+Go in your browser at http://phpmyadmin.docker.localhost --> phpmyadmin
+
 
 ## Develop
 cd public
